@@ -15,5 +15,17 @@ class MSPSparseGraph(NamedTuple):
 
     @property
     def num_node(self):
-        return self.adj_matrix.shape[0]
+        return self.adj_matrix.shape[-2]
 
+
+class MSPEmbedGraph(
+    NamedTuple(
+        'MSPEmbedGraph',
+        [
+            *MSPSparseGraph._field_types.items(),
+            ('node_embed', Tensor),
+            ('edge_embed', Tensor)
+        ]
+    ), MSPSparseGraph):
+    """ """
+    pass

@@ -211,11 +211,12 @@ def make_sparse_data(n_samples, node_feat_size=5, edge_feat_size=3, msp_size=Non
                 dense_shape = [node_features_shape[0], node_features_shape[0]]
             )
             adj_matrix = tf.sparse.to_dense(tf.sparse.reorder(adj_matrix))
+            adj_matrix = tf.cast(adj_matrix, dtype=tf.bool)
 
             yield MSPSparseGraph(adj_matrix, node_features, edge_features, alpha)
     
     output_signature = MSPSparseGraph(
-        adj_matrix = tf.TensorSpec(shape=None, dtype=tf.float32), 
+        adj_matrix = tf.TensorSpec(shape=None, dtype=tf.uint8), 
         node_features = tf.TensorSpec(shape=None, dtype=tf.float64), 
         edge_features = tf.TensorSpec(shape=None, dtype=tf.float64), 
         alpha = tf.TensorSpec(shape=None, dtype=tf.float64)

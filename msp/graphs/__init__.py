@@ -4,7 +4,7 @@ which has been built on top of the networkx graph.
 """
 
 from ._graphs import MSPGraph
-from ._sparse_graphs import MSPSparseGraph
+from ._sparse_graphs import MSPSparseGraph, MSPEmbedGraph
 
-__all__ = ['MSPGraph', 'MSPSparseGraph']
+__all__ = ['MSPGraph', 'MSPSparseGraph', 'MSPEmbedGraph']
 

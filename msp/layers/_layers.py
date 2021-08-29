@@ -4,7 +4,7 @@
 import tensorflow as tf
 from tensorflow.keras.layers import Layer
 
-from msp.graphs import MSPSparseGraph
+from msp.graphs import MSPEmbedGraph
 
 
 class GGCNLayer(Layer):
@@ -28,18 +28,18 @@ class GGCNLayer(Layer):
 
     def build(self, input_shape):
         """Create the state of the layer (weights)"""
-        node_features_shape = input_shape.node_features
-        edge_featues_shape = input_shape.edge_features
+        node_embed_shape = input_shape.node_embed
+        edge_embed_shape = input_shape.edge_embed
         embedded_shape = tf.TensorShape((None, self.units))
 
         with tf.name_scope('node'):
             with tf.name_scope('U'):
                 self.U = tf.keras.layers.Dense(self.units, use_bias=self.use_bias)
-                self.U.build(node_features_shape)
+                self.U.build(node_embed_shape)
 
             with tf.name_scope('V'):
                 self.V = tf.keras.layers.Dense(self.units, use_bias=self.use_bias)
-                self.V.build(node_features_shape)
+                self.V.build(node_embed_shape)
 
             with tf.name_scope('norm'):
                 self.norm_h = {
@@ -52,15 +52,15 @@ class GGCNLayer(Layer):
         with tf.name_scope('edge'):
             with tf.name_scope('A'):
                 self.A = tf.keras.layers.Dense(self.units, use_bias=self.use_bias)
-                self.A.build(tf.TensorShape((None, node_features_shape[-1])))
+                self.A.build(tf.TensorShape((None, node_embed_shape[-1])))
             
             with tf.name_scope('B'):
                 self.B = tf.keras.layers.Dense(self.units, use_bias=self.use_bias)
-                self.B.build(node_features_shape)
+                self.B.build(node_embed_shape)
 
             with tf.name_scope('C'):
                 self.C = tf.keras.layers.Dense(self.units, use_bias=self.use_bias)
-                self.C.build(edge_featues_shape)
+                self.C.build(edge_embed_shape)
 
             with tf.name_scope('norm'):
                 self.norm_e = {
@@ -75,8 +75,8 @@ class GGCNLayer(Layer):
     def call(self, inputs):
         """ """
         adj_matrix = inputs.adj_matrix
-        h = inputs.node_features
-        e = inputs.edge_features
+        h = inputs.node_embed
+        e = inputs.edge_embed
 
         # Edges Featuers
         Ah = self.A(h)
@@ -94,7 +94,17 @@ class GGCNLayer(Layer):
             [Uh, self._aggregate(Vh, edge_gates, adj_matrix)]
         )
 
-        outputs = MSPSparseGraph(adj_matrix, h, e, inputs.alpha)
+        outputs = MSPEmbedGraph(
+            *(   
+                inputs.adj_matrix,
+                inputs.node_features,
+                inputs.edge_features,
+                inputs.alpha
+            ),
+            node_embed = h,
+            edge_embed = e
+        )
+
         return outputs
         
     def _update_edges(self, e, transformations:list):
@@ -136,10 +146,7 @@ class GGCNLayer(Layer):
     def _aggregate(self, Vh, edge_gates, adj_matrix):
         """ """
         # Reshape as edge_gates
-        Vh = tf.broadcast_to(
-            tf.expand_dims(Vh, axis=1),
-            edge_gates.shape
-        )
+        Vh = tf.broadcast_to(tf.expand_dims(Vh, axis=1), edge_gates.shape)
         # Gating mechanism
         Vh = edge_gates * Vh
         

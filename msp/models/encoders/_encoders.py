@@ -5,7 +5,7 @@ import tensorflow as tf
 from tensorflow.keras import Model
 
 from msp.layers import GGCNLayer
-from msp.graphs import MSPSparseGraph
+from msp.graphs import MSPEmbedGraph
 
 
 class GGCNEncoder(Model):
@@ -28,10 +28,9 @@ class GGCNEncoder(Model):
         node_features_t = self.initial_layer_1(inputs.node_features)
         edge_features_t = self.initial_layer_2(inputs.edge_features)
         
-        outputs = MSPSparseGraph(inputs.adj_matrix, 
-                                 node_features_t, 
-                                 edge_features_t,
-                                 inputs.alpha)
+        outputs = MSPEmbedGraph(**inputs._asdict(), 
+                                node_embed=node_features_t,
+                                edge_embed=edge_features_t)
 
         for layer in self.ggcn_layers:
             outputs = layer(outputs)
