@@ -1,5 +1,6 @@
-""" 
 """
-from msp.models.encoders._encoders import GGCNEncoder
+The :mod:`mps.models.encoders` module defines encoder architecture.
+"""
+from msp.models.encoders._ggcn import GGCNEncoder
 
 __all__ = ['GGCNEncoder']

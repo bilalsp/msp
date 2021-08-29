@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+tensorflow = "2.6.0"
+pyyaml = "*"
+tensorflow-probability = "*"
+
+[dev-packages]
+parameterized = "*"
+flake8 = "*"
+isort = "*"
+coverage = "*"
+sphinx = "*"
+sphinx-rtd-theme = "*"
+pipenv-setup = "*"
+chardet = "*"
+
+[requires]
+python_version = "3.7"

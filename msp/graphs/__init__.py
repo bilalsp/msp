@@ -1,10 +1,7 @@
 """
-The :mod:`msp.graphs` module includes methods to create a MSPGraph object
-which has been built on top of the networkx graph.
+The :mod:`msp.graphs` module includes utility to define MSP instance 
+as a graph
 """
+from msp.graphs._sparse_graph import MSPEmbedGraph, MSPSparseGraph
 
-from ._graphs import MSPGraph
-from ._sparse_graphs import MSPSparseGraph, MSPEmbedGraph
-
-__all__ = ['MSPGraph', 'MSPSparseGraph', 'MSPEmbedGraph']
-
+__all__ = ['MSPSparseGraph', 'MSPEmbedGraph']

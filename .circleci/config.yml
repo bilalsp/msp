@@ -1,0 +1,35 @@
+version: 2.1
+
+workflows:
+  sample:  
+    jobs:
+      - build-and-test
+
+jobs:
+  build-and-test:
+    working_directory: ~/repo
+    
+    docker:
+      - image: cimg/python:3.7
+        environment:
+          PIPENV_VENV_IN_PROJECT: true
+
+    steps:
+      - checkout
+      - restore_cache: 
+          command: | 
+            echo 'Restoring cache....'
+          key: deps-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - run:
+          make test-build
+      - save_cache:
+          command: | 
+            echo 'Saving cache....'
+          key: deps-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          paths:
+            - ".venv"
+      - run:
+          name: Running tests
+          command: |
+            echo 'Running Testcases....'
+            make test
