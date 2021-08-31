@@ -1,0 +1,33 @@
+experiment_id: 1001
+model: MSPModel 
+model_params:
+  encoder: GGCNEncoder
+  encoder_params:
+    units: 128
+    layers: 4
+    name: Gated_Graph_Conv_Net_Encoder
+  decoder: AttentionDecoder
+  decoder_params:
+    units: 128
+    n_heads: 8
+    tanh_clipping: 10
+    name: Attention_based_Decoder
+train_data_params:
+  n_instances: 10048
+  msp_size: !!seq [5,2]
+val_data_params:
+  n_instances: 1024
+  msp_size: !!seq [5,2]
+test_data_params:
+  n_instances: 1024
+  msp_size: !!seq [5,2]
+  seed: 20212021
+tol: 0.001
+lr: 0.0001
+batch_size: 64
+epochs: 500 
+is_retrain: False
+output_dir: bin/outputs/
+
+
+

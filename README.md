@@ -21,10 +21,8 @@ in Clermont-Ferrand, France as a part of research internship.**
 
 # Table of contents
 - [Description](#Description)
+- [Usage](#Usage)
 - [Infrastructure](#Infrastructure)
-- [ETL Jobs](#ETL-Jobs)
-- [Dataset](#Dataset)
-- [Project Directory Structure](#Project-Directory-Structure)
 - [Conclusion](#Conclusion)
 
 ## Description
